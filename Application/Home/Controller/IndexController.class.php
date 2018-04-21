@@ -26,16 +26,18 @@ class IndexController extends Controller {
     }
     
     public function index(){
+        $good_amount = 1;
+
         // SetExpressCheckout
         // 币种
         $currenyCode = 'HKD';
         // 价格
-        $amount = new BasicAmountType($currencyCode, 100);
+        $amount = new BasicAmountType($currencyCode, $good_amount);
 
         // 货品详情
         $itemDetails = new PaymentDetailsItemType();
-        $itemDetails->Name = 'TopUp Counpon';
-        $itemDetails->Amount = 100;
+        $itemDetails->Name = '商品名称';
+        $itemDetails->Amount = $good_amount;
         $itemDetails->Quantity = 1;
 
         $itemDetails->ItemCategory = "Physical";
@@ -101,7 +103,8 @@ class IndexController extends Controller {
             if($setECResponse->Ack =='Success') {
                 $token = $setECResponse->Token;
                 // Redirect to paypal.com here
-                $payPalURL = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . $token;
+                // $payPalURL = 'https://www.paypal.com/webscr?cmd=_express-checkout&token=' . $token;
+                $payPalURL = sprintf('%s?cmd=_express-checkout&token=%s', C('PAYPAL_PAYURL'), $token);
                 // echo" <a href=$payPalURL><b>* Redirect to PayPal to login </b></a><br>";
                 echo("<script>window.location.href='$payPalURL'</script>");
             }
@@ -112,7 +115,7 @@ class IndexController extends Controller {
         echo('支付取消');
     }
 
-    public function return() {
+    public function return1() {
         echo('支付成功'); 
     }
 }
